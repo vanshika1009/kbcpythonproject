@@ -1,0 +1,77 @@
+from tkinter import *
+from tkinter.messagebox import *
+from pymysql import *
+class form1:
+    def insert(self):
+        if self.tb1.get()=='' or self.tb2.get()=='' or self.tb3.get()=='' or self.tb4.get()=='' or self.tb5.get()=='' or self.tb6.get()=='':
+            showinfo("Error ", "All fields are compulsory to fill")
+        else:
+            print(self.tb1.get())
+            s = "insert into kbc1 values (NULL, '"+self.tb1.get()+"', '"+self.tb2.get()+"', '"+self.tb3.get()+"', '"+self.tb4.get()+"', '"+self.tb5.get()+"', '"+self.tb6.get()+"')"
+            con = connect('snlvedant.db.7623447.b14.hostedresource.net', 'snlvedant', 'VMMeducation@123', 'snlvedant')
+            cr = con.cursor()
+            cr.execute(s)
+            con.commit()
+            showinfo("", "Question added successfully")
+    #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    def __init__(self):
+        self.root = Tk()
+        self.root.geometry('400x400')
+        self.root.configure(background = "BLACK")
+        #------------panel window------------------
+        self.p1 = PanedWindow(self.root, bg = 'BLACK')
+        self.p2 = PanedWindow(self.root, bg = 'BLACK')
+        self.p1.pack()
+        self.p2.pack()
+        #------------------------------------------
+        #---------------p1---------------------------
+        self.lb = Label(self.p1, text = 'INPUT', font = ('bold', 48), bg = "BLACK", fg = "WHITE")
+        #------------------p2-----------------------
+        self.lb1 = Label(self.p2, text = 'Question')
+        self.tb1 = Entry(self.p2, width = 48, font = (12))
+
+        self.lb2 = Label(self.p2, text = 'Option A')
+        self.tb2 = Entry (self.p2, width = 48, font = (12))
+
+        self.lb3 = Label(self.p2, text = 'Option B')
+        self.tb3 = Entry(self.p2, width = 48, font = (12))
+
+        self.lb4 = Label(self.p2, text = 'Option C')
+        self.tb4 = Entry(self.p2, width = 48, font = (12))
+
+        self.lb5 = Label(self.p2, text = 'Option D')
+        self.tb5 = Entry(self.p2, width = 48, font = (12))
+
+        self.lb6 = Label(self.p2, text = 'Answer')
+        self.tb6 = Entry(self.p2, width = 48, font = (12))
+
+        self.bt = Button(self.p2, text = 'Submit',command = self.insert)
+        #-------------------------------------------
+        #--------------p2 in grid-------------------
+        self.lb1.grid(row = 0, column = 0, pady=5,padx=20)
+        self.tb1.grid(row = 0, column  = 1)
+
+        self.lb2.grid(row=1, column=0,pady=5,padx=20)
+        self.tb2.grid(row=1, column=1)
+
+        self.lb3.grid(row=2, column=0, pady=5,padx=20)
+        self.tb3.grid(row=2, column=1)
+
+        self.lb4.grid(row=3, column=0, pady=5,padx=20)
+        self.tb4.grid(row=3, column=1)
+
+        self.lb5.grid(row=4, column=0, pady=5,padx=20)
+        self.tb5.grid(row=4, column=1)
+
+        self.lb6.grid(row=5, column=0, pady=5,padx=20)
+        self.tb6.grid(row=5, column=1)
+
+        self.bt.grid(row = 6, column = 0)
+        #-------------------------------------------------
+        self.lb.pack()
+        #-------------------------------------------------
+
+        self.root.mainloop()
+#---------------------------------------------------------------
+if __name__ == '__main__':
+    obj = form1()
