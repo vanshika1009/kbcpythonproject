@@ -1,0 +1,144 @@
+from tkinter import *
+from tkinter.messagebox import *
+from tkinter import ttk
+from pymysql import *
+class view:
+    def update(self, qid):
+        conn = connect("snlvedant.db.7623447.b14.hostedresource.net", "snlvedant", "VMMeducation@123", "snlvedant")
+        # s = "update kbc1 set question = '"+str(self.tb_ques.get())+"',option_a='"+self.tb_option_a.get()+"',option_b='"+self.tb_option_b.get()+"',option_c='"+self.tb_option_c.get()+"',option_d='"+self.tb_option_d.get()+"',ans='"+self.tb_ans.get()"' where q_id = qid"
+        query="update kbc1 set question='"+str(self.tb_ques.get())+"',option_a='"+str(self.tb_option_a.get())+"',option_b='"+str(self.tb_option_b.get())+"',option_c='"+str(self.tb_option_c.get())+"',option_d='"+str(self.tb_option_d.get())+"',ans='"+str(self.tb_ans.get())+"' where q_id = "+str(qid)
+
+        cr = conn.cursor()
+        cr.execute(query)
+        conn.commit()
+        showinfo("", "Data Updated")
+        print(qid)
+    def remove(self,qid):
+        conn = connect("snlvedant.db.7623447.b14.hostedresource.net", "snlvedant", "VMMeducation@123", "snlvedant")
+        cr = conn.cursor()
+        s = "delete from kbc1 where q_id=" +str(qid)
+        cr.execute(s)
+        conn.commit()
+        showinfo("", "Student Record Deleted")
+        self.tb_ques.delete(0, END)
+        self.tb_option_a.delete(0, END)
+        self.tb_option_b.delete(0, END)
+        self.tb_option_c.delete(0, END)
+        self.tb_option_d.delete(0, END)
+        self.tb_ans.delete(0, END)
+
+    def ondoubleclick(self, event):
+        print('hello')
+        item = self.t1.item(self.t1.focus())
+        col = self.t1.identify_column(event.x)
+        print(item)
+
+        win=Toplevel()                    #another tkinter window to have selected values
+        win.geometry('800x400')
+        win.configure(background = 'black')
+        # ------------panel window------------------+-
+        self.pannel1 = PanedWindow(win, bg='BLACK')
+        self.pannel2 = PanedWindow(win, bg='BLACK')
+        self.pannel1.pack()
+        self.pannel2.pack()
+        #----------------------------------------------------------------------
+        #--------------------pannel1-------------------------------------------
+        self.lb_view = Label(self.pannel1, text='VIEW', font=('bold', 48), bg="BLACK", fg="WHITE")
+        #-----------------------------------------------------------------------
+        #--------------------pannel2---------------------------------------------
+
+
+        self.lb_ques = Label(self.pannel2, text='Question')
+        self.tb_ques = Entry(self.pannel2, width=48, font=(12))
+
+        self.lb_option_a = Label(self.pannel2, text='Option A')
+        self.tb_option_a = Entry(self.pannel2, width=48, font=(12))
+
+        self.lb_option_b = Label(self.pannel2, text='Option B')
+        self.tb_option_b = Entry(self.pannel2, width=48, font=(12))
+
+        self.lb_option_c = Label(self.pannel2, text='Option C')
+        self.tb_option_c = Entry(self.pannel2, width=48, font=(12))
+
+        self.lb_option_d = Label(self.pannel2, text='Option D')
+        self.tb_option_d = Entry(self.pannel2, width=48, font=(12))
+
+        self.lb_ans = Label(self.pannel2, text='Answer')
+        self.tb_ans = Entry(self.pannel2, width=48, font=(12))
+
+        self.bt_update = Button(self.pannel2, text='Update',command=lambda :self.update(item['values'][0]))
+        self.bt_del = Button(self.pannel2, text = 'Delete', command=lambda :self.remove(item['values'][0]))
+        # -------------------------------------------
+        # --------------p2 in grid-------------------
+
+        self.lb_ques.grid(row=0, column=0, pady=5, padx=20)
+        self.tb_ques.grid(row=0, column=1)
+
+        self.lb_option_a.grid(row=1, column=0, pady=5, padx=20)
+        self.tb_option_a.grid(row=1, column=1)
+
+        self.lb_option_b.grid(row=2, column=0, pady=5, padx=20)
+        self.tb_option_b.grid(row=2, column=1)
+
+        self.lb_option_c.grid(row=3, column=0, pady=5, padx=20)
+        self.tb_option_c.grid(row=3, column=1)
+
+        self.lb_option_d.grid(row=4, column=0, pady=5, padx=20)
+        self.tb_option_d.grid(row=4, column=1)
+
+        self.lb_ans.grid(row=5, column=0, pady=5, padx=20)
+        self.tb_ans.grid(row=5, column=1)
+
+        self.bt_update.grid(row=6, column=0, pady = 5, padx = 20)
+        self.bt_del.grid(row = 6, column = 1, pady = 5, padx = 20)
+        #-----------------
+        # -----------------------------------------------
+        self.lb_view.pack()
+        #-------------------------------------------------------------
+        # print(item['values'][0])
+        # print(item['values'][1])
+        # print(item['values'][2])
+        # print(item['values'][3])
+        # print(item['values'][4])
+        # print(item['values'][5])
+        # print(item['values'][6])
+        self.tb_ques.insert(0,item['values'][1])                              #inserting into the text
+        self.tb_option_a.insert(0,item['values'][2])
+        self.tb_option_b.insert(0,item['values'][3])
+        self.tb_option_c.insert(0,item['values'][4])
+        self.tb_option_d.insert(0,item['values'][5])
+        self.tb_ans.insert(0,item['values'][6])
+
+        win.mainloop()
+
+    def __init__(self):
+        self.root = Tk()
+        Label(self.root, font = ('bold',48), text = 'VIEW QUESTIONS').pack()
+        self.t1 = ttk.Treeview (self.root, columns = ("qId", "que", "opA", "opB", "opC", "opD", "ans"))
+        vsb=ttk.Scrollbar(self.root,orient='vertical',command=self.t1.yview)      #setting the scrollbar on root with vertical orientation and a command
+        vsb.pack(side=RIGHT,fill=Y)                    #setting the vsb scrollbar on right hand side of the Y axis
+        self.t1.configure(yscrollcommand=vsb.set)      #setting the vsb scrollbar on t1
+        self.t1.pack(fill='both',expand=1)             #to expand the window through out the screen
+        self.t1.heading("qId", text = "Question Id")
+        self.t1.heading("que", text = "Question")
+        self.t1.heading("opA", text = "Option A")
+        self.t1.heading("opB", text = "Option B")
+        self.t1.heading("opC", text = "Option C")
+        self.t1.heading("opD", text = "Option D")
+        self.t1.heading("ans", text = "Correct Option ")
+        self.t1["show"] = "headings"
+        self.t1.bind("<Double-1>",self.ondoubleclick)        #binding double click withe the new window
+        s = "Select * from kbc1"
+        conn = Connect("snlvedant.db.7623447.b14.hostedresource.net", "snlvedant", "VMMeducation@123", "snlvedant")
+        cr = conn.cursor()
+        cr.execute(s)
+        result = cr.fetchall()
+
+        i = 0
+        for row in result:
+            self.t1.insert("", index=i, values=row)
+            i = i + 1
+        self.root.mainloop()
+#--------------------------------------------------------------------------------------------------
+if __name__ == '__main__':
+    obj = view()
